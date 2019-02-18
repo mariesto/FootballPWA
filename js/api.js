@@ -41,7 +41,7 @@ function getCLMatches() {
                                 `;
                             });
                             document.getElementById("matches").innerHTML = matchesHTML;
-                        })
+                        }).catch(error);
                 }
             })
     } else {
@@ -139,7 +139,6 @@ function getTeamById() {
             for (i in data.squad) {
                 playersHTML += data.squad[i].name + "<br>";
             }
-            // document.getElementById("allPlayers").innerHTML = playersHTML;
 
             var teamHTML = `
                 <div class="row">
@@ -161,7 +160,7 @@ function getTeamById() {
                         <div class="card-action">
                           <div class="s6">
                             <a href="${data.website}">Website Team</a> ${data.phone}
-                            <a href="" onclick="addToIndexDB()">
+                            <a href="../favouriteTeam.html" onclick='addToIndexDB()'>
                                 <i class="material-icons right">favorite_border</i>
                             </a>
                           </div>
@@ -175,15 +174,77 @@ function getTeamById() {
 }
 
 function addToIndexDB() {
+
     if (!('indexedDB' in window)) {
         console.log('This browser doesn\\\'t support IndexedDB');
         return;
     }
 
-    var dbPromise = indexedDB.open("mydatabase", 1, function(upgradeDb) {
+    var dbPromise = idb.open("mydatabase", 1, function(upgradeDb) {
         console.log('Creating new object store . . . ');
         if (!upgradeDb.objectStoreNames.contains("teams")) {
-            upgradeDb.createObjectStore("teams");
+            upgradeDb.createObjectStore("teams", {keyPath: 'id', autoIncrement: true});
         }
+        console.log('Object store created!')
     });
+
+    var urlParams = new URLSearchParams(window.location.search);
+    var idParam = urlParams.get("id");
+
+    fetch(base_url + "teams/" + idParam, {
+        headers : {
+            'X-Auth-Token': "b5e1c0925d18437c9d64c2ebd568940c"
+        }
+    })
+        .then(status)
+        .then(json)
+        .then(function (data) {
+            dbPromise.then(function (db) {
+                var tx = db.transaction('teams', 'readwrite');
+                var store = tx.objectStore('teams');
+                var team = {
+                    name: `${data.name}`
+                };
+                store.add(team);
+                return tx.complete;
+            }).then(function () {
+                console.log('Team successfully added');
+            }).catch(function () {
+                console.log('Team failed to added');
+            });
+        });
+}
+
+function getAllFromIndexDB() {
+
+    if (!('indexedDB' in window)) {
+        console.log('This browser doesn\\\'t support IndexedDB');
+        return;
+    }
+
+    var dbPromise = idb.open("mydatabase", 1);
+
+    dbPromise.then(function (db) {
+        var tx = db.transaction('teams', 'readonly');
+        var store = tx.objectStore('teams');
+
+        return store.getAll();
+    }).then(function (teams) {
+        console.log('Data successfully fetch : ', teams);
+
+        var favouriteHTML = `
+            <ul class="collection with-header">
+              <li class="collection-item">
+                <div>
+                    ${teams.name}
+                </div>
+              </li>
+            </ul>
+        `;
+
+        document.getElementById('team-favourite').innerHTML = favouriteHTML;
+    }).catch(function () {
+        console.log('Data fail to fetch');
+    });
+
 }

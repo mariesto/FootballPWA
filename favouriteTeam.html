@@ -8,7 +8,6 @@
     <meta name="description" content="My FootballApp PWA" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/materialize.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 
@@ -22,13 +21,12 @@
     </div>
 </nav>
 
-<div class="container" id="team-detail">
-</div>
+<div class="container" id="team-favourite"></div>
 
 <script type="text/javascript" src="https://unpkg.com/snarkdown@1.0.2/dist/snarkdown.umd.js"></script>
 <script src="js/materialize.min.js"></script>
-<script src="js/api.js"></script>
 <script src="js/idb.js"></script>
+<script src="js/api.js"></script>
 
 <script>
     if("serviceWorker" in navigator){
@@ -45,8 +43,33 @@
         console.log("ServiceWorker belum didukung browser ini.");
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        getTeamById();
+    var dbPromise = idb.open("mydatabase", 1);
+
+    dbPromise.then(function (db) {
+        var tx = db.transaction('teams', 'readonly');
+        var store = tx.objectStore('teams');
+
+        return store.getAll();
+    }).then(function (teams) {
+        console.log('Data successfully fetch : ', teams);
+
+        var favouriteHTML = "";
+
+        teams.forEach(function (team) {
+            favouriteHTML += `
+                <ul class="collection with-header">
+                  <li class="collection-item">
+                    <div>
+                        ${team.name}
+                    </div>
+                  </li>
+                </ul>
+            `
+        });
+
+        document.getElementById('team-favourite').innerHTML = favouriteHTML;
+    }).catch(function () {
+        console.log('Data fail to fetch');
     });
 </script>
 </body>
