@@ -159,7 +159,12 @@ function getTeamById() {
                           </p>
                         </div>
                         <div class="card-action">
-                          <div class="s6"><a href="${data.website}">Website Team</a> ${data.phone}</div>
+                          <div class="s6">
+                            <a href="${data.website}">Website Team</a> ${data.phone}
+                            <a href="" onclick="addToIndexDB()">
+                                <i class="material-icons right">favorite_border</i>
+                            </a>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -167,4 +172,18 @@ function getTeamById() {
             `;
             document.getElementById("team-detail").innerHTML = teamHTML;
         });
+}
+
+function addToIndexDB() {
+    if (!('indexedDB' in window)) {
+        console.log('This browser doesn\\\'t support IndexedDB');
+        return;
+    }
+
+    var dbPromise = indexedDB.open("mydatabase", 1, function(upgradeDb) {
+        console.log('Creating new object store . . . ');
+        if (!upgradeDb.objectStoreNames.contains("teams")) {
+            upgradeDb.createObjectStore("teams");
+        }
+    });
 }
