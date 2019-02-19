@@ -1,11 +1,11 @@
-const CACHE_NAME = "marbola-v1"
+const CACHE_NAME = "marbola-v1";
 var urlsToCache = [
     "/",
     "/nav.html",
     "/index.html",
     "/competition.html",
     "/team.html",
-    "/favouriteTeam.html",
+    "/fav-team.html",
     "/pages/home.html",
     "/pages/about.html",
     "/pages/contact.html",

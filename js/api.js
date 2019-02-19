@@ -160,7 +160,7 @@ function getTeamById() {
                         <div class="card-action">
                           <div class="s6">
                             <a href="${data.website}">Website Team</a> ${data.phone}
-                            <a href="../favouriteTeam.html" onclick='addToIndexDB()'>
+                            <a href="../fav-team.html" onclick='addData()'>
                                 <i class="material-icons right">favorite_border</i>
                             </a>
                           </div>
@@ -173,14 +173,13 @@ function getTeamById() {
         });
 }
 
-function addToIndexDB() {
-
+function addData() {
     if (!('indexedDB' in window)) {
         console.log('This browser doesn\\\'t support IndexedDB');
         return;
     }
 
-    var dbPromise = idb.open("mydatabase", 1, function(upgradeDb) {
+    var dbPromise = idb.open("mydatabase", 6, function(upgradeDb) {
         console.log('Creating new object store . . . ');
         if (!upgradeDb.objectStoreNames.contains("teams")) {
             upgradeDb.createObjectStore("teams", {keyPath: 'id', autoIncrement: true});
@@ -205,13 +204,13 @@ function addToIndexDB() {
                 var team = {
                     name: `${data.name}`
                 };
-                store.add(team);
+                store.put(team);
                 return tx.complete;
             }).then(function () {
                 console.log('Team successfully added');
-            }).catch(function () {
+            }).catch(function (error) {
                 console.log('Team failed to added');
+                console.log(error);
             });
         });
 }
-

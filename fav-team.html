@@ -31,21 +31,7 @@
 <script src="js/api.js"></script>
 
 <script>
-    if("serviceWorker" in navigator){
-        window.addEventListener("load", function(){
-            navigator.serviceWorker.register("/service-worker.js")
-                .then(function(){
-                    console.log("Pendaftaran ServiceWorker berhasil");
-                })
-                .catch(function(){
-                    console.log("Pendaftaran ServiceWorker gagal");
-                });
-        });
-    } else{
-        console.log("ServiceWorker belum didukung browser ini.");
-    }
-
-    var dbPromise = idb.open("mydatabase", 1);
+    var dbPromise = idb.open("mydatabase", 6);
 
     dbPromise.then(function (db) {
         var tx = db.transaction('teams', 'readonly');
@@ -78,7 +64,7 @@
     });
 
     function deleteTeam(id) {
-        var dbPromise = idb.open("mydatabase", 1);
+        var dbPromise = idb.open("mydatabase", 6);
 
         dbPromise.then(function (db) {
             var tx = db.transaction('teams', 'readwrite');

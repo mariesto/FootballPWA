@@ -1,7 +1,7 @@
 {
-  "name" : "My First PWA",
-  "short_name" : "My PWA",
-  "description" : "My First PWA with Dicoding",
+  "name" : "Marbola",
+  "short_name" : "Marbola",
+  "description" : "Football PWA with Dicoding",
   "start_url" : "/index.html",
   "display" : "standalone",
   "background_color" : "#00897B",
@@ -17,5 +17,7 @@
       "sizes": "192x192",
       "type": "image/png"
     }
-  ]
+  ],
+  "name": "Push Notifications FCM",
+  "gcm_sender_id": "193295167139"
 }
