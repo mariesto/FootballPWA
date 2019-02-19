@@ -169,7 +169,7 @@ function getTeamById() {
                     </div>
                 </div>
             `;
-            document.getElementById("team-detail").innerHTML = teamHTML;
+            document.getElementById("body-content").innerHTML = teamHTML;
         });
 }
 
@@ -215,36 +215,3 @@ function addToIndexDB() {
         });
 }
 
-function getAllFromIndexDB() {
-
-    if (!('indexedDB' in window)) {
-        console.log('This browser doesn\\\'t support IndexedDB');
-        return;
-    }
-
-    var dbPromise = idb.open("mydatabase", 1);
-
-    dbPromise.then(function (db) {
-        var tx = db.transaction('teams', 'readonly');
-        var store = tx.objectStore('teams');
-
-        return store.getAll();
-    }).then(function (teams) {
-        console.log('Data successfully fetch : ', teams);
-
-        var favouriteHTML = `
-            <ul class="collection with-header">
-              <li class="collection-item">
-                <div>
-                    ${teams.name}
-                </div>
-              </li>
-            </ul>
-        `;
-
-        document.getElementById('team-favourite').innerHTML = favouriteHTML;
-    }).catch(function () {
-        console.log('Data fail to fetch');
-    });
-
-}
