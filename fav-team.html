@@ -31,7 +31,7 @@
 <script src="js/api.js"></script>
 
 <script>
-    var dbPromise = idb.open("mydatabase", 6);
+    var dbPromise = idb.open("mydatabase", 9);
 
     dbPromise.then(function (db) {
         var tx = db.transaction('teams', 'readonly');
@@ -64,7 +64,7 @@
     });
 
     function deleteTeam(id) {
-        var dbPromise = idb.open("mydatabase", 6);
+        var dbPromise = idb.open("mydatabase", 9);
 
         dbPromise.then(function (db) {
             var tx = db.transaction('teams', 'readwrite');

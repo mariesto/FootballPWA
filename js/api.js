@@ -159,7 +159,7 @@ function getTeamById() {
                         </div>
                         <div class="card-action">
                           <div class="s6">
-                            <a href="${data.website}">Website Team</a> ${data.phone}
+                            <a href="${data.website}">Website</a> ${data.phone}
                             <a href="../fav-team.html" onclick='addData()'>
                                 <i class="material-icons right">favorite_border</i>
                             </a>
@@ -179,7 +179,7 @@ function addData() {
         return;
     }
 
-    var dbPromise = idb.open("mydatabase", 6, function(upgradeDb) {
+    var dbPromise = idb.open("mydatabase", 9, function(upgradeDb) {
         console.log('Creating new object store . . . ');
         if (!upgradeDb.objectStoreNames.contains("teams")) {
             upgradeDb.createObjectStore("teams", {keyPath: 'id', autoIncrement: true});
