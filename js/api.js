@@ -199,6 +199,13 @@ function addData() {
         .then(json)
         .then(function (data) {
             dbPromise.then(function (db) {
+                if ('PushManager' in window) {
+                    navigator.serviceWorker.getRegistration()
+                        .then(function (reg) {
+                            reg.showNotification(`Team ${data.name} added to your favourite list`);
+                        });
+                }
+
                 var tx = db.transaction('teams', 'readwrite');
                 var store = tx.objectStore('teams');
                 var team = {
@@ -213,4 +220,6 @@ function addData() {
                 console.log(error);
             });
         });
+
+
 }
