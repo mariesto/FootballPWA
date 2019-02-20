@@ -1,10 +1,10 @@
 var webPush = require('web-push');
 
 var pushSubscription = {
-    "endpoint": "https://android.googleapis.com/gcm/send/e1DdaMG6Ymo:APA91bEba3NrfwNJmWvgq63LMVUqihdktzb8ejJQV4Nw1SJS-xcTNbRs4S8xQ-Tcpn7ok4DjPwiT9ha2IGFKvPC8qSUqvWsgll_3Yr3g-iCyw-AQ5UaKzlGq13cr-2jlEfi7IZZduorZ",
+    "endpoint": "https://android.googleapis.com/gcm/send/cBotu23VVuU:APA91bGwWAP_nRZue7WaDh-SO0o5cUSPwvD98TpqGC9SYdaZBD_qorlfqjqJ8qr2xXS0NuVIn_30z1xQsJUzU7BqUf-DHtNByn5GrOlaWlkAho2gZo6THxn1uGWvbdKPclKR3M0pseu1",
     "keys": {
-        "p256dh": "BH0YEl0MZu2RCv2aLnRRJsWLv5DkhssMWOtRvnwOK73MxCURetP7nwUa3ePtOUCdWOofUXyAA9Rv7ZjRViy26kI=",
-        "auth": "PtlI88Fi0YQmhhrvPxm8FQ=="
+        "p256dh": "BJ2Y7Dk8f9ER1kPIY2gP6b3lvtwftEIwVOS22ubSeDAeXzcvaFCaz4cyYxOVVjpEJG5TMv5Xnr2Y4wx7sKSym+8=",
+        "auth": "v2MwvxMHpvrTBIShfEcZog=="
     }
 };
 
