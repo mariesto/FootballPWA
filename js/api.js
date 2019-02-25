@@ -160,9 +160,6 @@ function getTeamById() {
                         <div class="card-action">
                           <div class="s6">
                             <a href="${data.website}">Website</a> ${data.phone}
-                            <a href="../fav-team.html" onclick='addData()'>
-                                <i class="material-icons right">favorite_border</i>
-                            </a>
                           </div>
                         </div>
                       </div>
@@ -171,55 +168,4 @@ function getTeamById() {
             `;
             document.getElementById("body-content").innerHTML = teamHTML;
         });
-}
-
-function addData() {
-    if (!('indexedDB' in window)) {
-        console.log('This browser doesn\\\'t support IndexedDB');
-        return;
-    }
-
-    var dbPromise = idb.open("mydatabase", 9, function(upgradeDb) {
-        console.log('Creating new object store . . . ');
-        if (!upgradeDb.objectStoreNames.contains("teams")) {
-            upgradeDb.createObjectStore("teams", {keyPath: 'id', autoIncrement: true});
-        }
-        console.log('Object store created!')
-    });
-
-    var urlParams = new URLSearchParams(window.location.search);
-    var idParam = urlParams.get("id");
-
-    fetch(base_url + "teams/" + idParam, {
-        headers : {
-            'X-Auth-Token': "b5e1c0925d18437c9d64c2ebd568940c"
-        }
-    })
-        .then(status)
-        .then(json)
-        .then(function (data) {
-            dbPromise.then(function (db) {
-                if ('PushManager' in window) {
-                    navigator.serviceWorker.getRegistration()
-                        .then(function (reg) {
-                            reg.showNotification(`Team ${data.name} added to your favourite list`);
-                        });
-                }
-
-                var tx = db.transaction('teams', 'readwrite');
-                var store = tx.objectStore('teams');
-                var team = {
-                    name: `${data.name}`
-                };
-                store.put(team);
-                return tx.complete;
-            }).then(function () {
-                console.log('Team successfully added');
-            }).catch(function (error) {
-                console.log('Team failed to added');
-                console.log(error);
-            });
-        });
-
-
 }

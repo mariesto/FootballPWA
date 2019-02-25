@@ -25,6 +25,13 @@
 <div class="container" id="body-content">
 </div>
 
+<div class="container center">
+    <button class="btn" onclick="addData()">
+        <i class="material-icons right">favorite_border</i>Add to my favourite team
+    </button>
+</div>
+<br>
+
 <script type="text/javascript" src="https://unpkg.com/snarkdown@1.0.2/dist/snarkdown.umd.js"></script>
 <script src="js/materialize.min.js"></script>
 <script src="js/api.js"></script>
@@ -35,6 +42,59 @@
     document.addEventListener("DOMContentLoaded", function () {
         getTeamById();
     });
+
+    function addData() {
+        if (!('indexedDB' in window)) {
+            console.log('This browser doesn\\\'t support IndexedDB');
+            return;
+        }
+
+        var dbPromise = idb.open("mydatabase", 1, function(upgradeDb) {
+            console.log('Creating new object store . . . ');
+            if (!upgradeDb.objectStoreNames.contains("teams")) {
+                upgradeDb.createObjectStore("teams", {keyPath: 'id', autoIncrement: true});
+            }
+            console.log('Object store created!')
+        });
+
+        var urlParams = new URLSearchParams(window.location.search);
+        var idParam = urlParams.get("id");
+
+        fetch(base_url + "teams/" + idParam, {
+            headers : {
+                'X-Auth-Token': "b5e1c0925d18437c9d64c2ebd568940c"
+            }
+        })
+            .then(status)
+            .then(json)
+            .then(function (data) {
+                dbPromise.then(function (db) {
+                    if ('PushManager' in window) {
+                        navigator.serviceWorker.getRegistration()
+                            .then(function (reg) {
+                                reg.showNotification(`Team ${data.name} added to your favourite list`);
+                            });
+                    }
+
+                    var tx = db.transaction('teams', 'readwrite');
+                    var store = tx.objectStore('teams');
+                    var team = {
+                        name: `${data.name}`
+                    };
+                    store.put(team);
+                    return tx.complete;
+                    window.location.href = "fav-team.html";
+                }).then(function () {
+                    console.log('Team successfully added');
+                }).catch(function (error) {
+                    alert('Fail to add team :(');
+                    console.log('Team failed to added');
+                    console.log(error);
+                });
+            });
+
+
+    }
 </script>
 </body>
 </html>

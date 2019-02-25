@@ -31,20 +31,25 @@
 <script src="js/api.js"></script>
 
 <script>
-    var dbPromise = idb.open("mydatabase", 9);
+    var dbPromise = idb.open("mydatabase", 1);
 
-    dbPromise.then(function (db) {
-        var tx = db.transaction('teams', 'readonly');
-        var store = tx.objectStore('teams');
+    document.addEventListener("DOMContentLoaded", function () {
+        getAllTeam();
+    });
 
-        return store.getAll();
-    }).then(function (teams) {
-        console.log('Data successfully fetch : ', teams);
+    function getAllTeam() {
+        dbPromise.then(function (db) {
+            var tx = db.transaction('teams', 'readonly');
+            var store = tx.objectStore('teams');
 
-        var favouriteHTML = "";
+            return store.getAll();
+        }).then(function (teams) {
+            console.log('Data successfully fetch : ', teams);
 
-        teams.forEach(function (team) {
-            favouriteHTML += `
+            var favouriteHTML = "";
+
+            teams.forEach(function (team) {
+                favouriteHTML += `
                 <ul class="collection with-header">
                   <li class="collection-item">
                     <div>
@@ -56,15 +61,15 @@
                   </li>
                 </ul>
             `
-        });
+            });
 
-        document.getElementById('body-content').innerHTML = favouriteHTML;
-    }).catch(function () {
-        console.log('Data fail to fetch');
-    });
+            document.getElementById('body-content').innerHTML = favouriteHTML;
+        }).catch(function () {
+            console.log('Data fail to fetch');
+        });
+    }
 
     function deleteTeam(id) {
-        var dbPromise = idb.open("mydatabase", 9);
 
         dbPromise.then(function (db) {
             var tx = db.transaction('teams', 'readwrite');
