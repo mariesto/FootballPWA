@@ -31,7 +31,13 @@
 <script src="js/api.js"></script>
 
 <script>
-    var dbPromise = idb.open("mydatabase", 1);
+    var dbPromise = idb.open("mydatabase", 1, function(upgradeDb) {
+        console.log('Creating new object store . . . ');
+        if (!upgradeDb.objectStoreNames.contains("teams")) {
+            upgradeDb.createObjectStore("teams", {keyPath: 'id', autoIncrement: true});
+        }
+        console.log('Object store created!')
+    });
 
     document.addEventListener("DOMContentLoaded", function () {
         getAllTeam();
@@ -72,12 +78,23 @@
     function deleteTeam(id) {
 
         dbPromise.then(function (db) {
+            if ('PushManager' in window) {
+                navigator.serviceWorker.getRegistration()
+                    .then(function (reg) {
+                        reg.showNotification(`Team successfully removed from your favourite list`);
+                    });
+            }
+
             var tx = db.transaction('teams', 'readwrite');
             var store = tx.objectStore('teams');
             store.delete(id);
             return tx.complete;
         }).then(function () {
+            window.location.href = "index.html";
             console.log('Team deleted');
+        }).catch(function (error) {
+            alert('Fail to add team :(');
+            console.log(error);
         });
     }
 </script>

@@ -83,8 +83,8 @@
                     };
                     store.put(team);
                     return tx.complete;
-                    window.location.href = "fav-team.html";
                 }).then(function () {
+                    window.location.href = "fav-team.html";
                     console.log('Team successfully added');
                 }).catch(function (error) {
                     alert('Fail to add team :(');
@@ -92,8 +92,6 @@
                     console.log(error);
                 });
             });
-
-
     }
 </script>
 </body>
